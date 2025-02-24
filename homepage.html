@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdharvBrowse - Homepage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+    
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+    
+        #news {
+            margin-top: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+    
+        #searchForm {
+            text-align: center;
+            margin: 20px 0;
+        }
+    
+        #searchQuery {
+            width: 80%;
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+    
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 4px;
+            background-color: #007BFF;
+            color: #fff;
+            cursor: pointer;
+        }
+    
+        button:hover {
+            background-color: #0056b3;
+        }
+    
+        #currentTime {
+            text-align: center;
+            font-size: 1.5em;
+            margin: 20px 0;
+            color: #555;
+        }
+    
+        .news-item {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+    
+        .news-item h3 {
+            margin: 0 0 10px;
+            color: #007BFF;
+        }
+    
+        .news-item p {
+            margin: 0 0 10px;
+        }
+    
+        .news-item a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+    
+        .news-item a:hover {
+            text-decoration: underline;
+        }
+    
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Welcome to AdharvBrowse</h1>
+    <div id="currentTime"></div>
+
+    <div id="searchForm">
+        <input type="text" id="searchQuery" placeholder="Search Google..." />
+        <button onclick="searchGoogle()">Search</button>
+    </div>
+
+    <div id="news">
+        <h2>Latest News</h2>
+        <div id="newsFeed"></div>
+    </div>
+
+    <script>
+        function updateTime() {
+            const now = new Date();
+            const options = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            document.getElementById('currentTime').innerText = now.toLocaleTimeString([], options);
+        }
+
+        async function fetchNews() {
+            const url = 'https://saurav.tech/NewsAPI/top-headlines/category/general/in.json';
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+                displayNews(data.articles);
+            } catch (error) {
+                console.error('Fetch error:', error);
+                document.getElementById('newsFeed').innerText = 'Failed to load news articles.';
+            }
+        }
+
+        function displayNews(articles) {
+            const newsFeed = document.getElementById('newsFeed');
+            newsFeed.innerHTML = '';
+            articles.forEach(article => {
+                const newsItem = document.createElement('div');
+                newsItem.className = 'news-item';
+                newsItem.innerHTML = `
+                    <h3>${article.title}</h3>
+                    <p>${article.description || ''}</p>
+                    ${article.urlToImage ? `<img src="${article.urlToImage}" alt="Image for article ${article.title}">` : ''}
+                    <p><a href="${article.url}">Read more</a></p>
+                `;
+                newsFeed.appendChild(newsItem);
+            });
+        }
+
+        function searchGoogle() {
+            const query = document.getElementById('searchQuery').value;
+            if (query) {
+                window.location.href = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+            }
+        }
+
+        setInterval(updateTime, 1000);
+        fetchNews();
+        setInterval(fetchNews, 300000);
+    </script>
+</body>
+
+</html>
