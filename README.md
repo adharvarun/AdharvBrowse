@@ -1,12 +1,15 @@
 # AdharvBrowse
 > Privacy Browser built with Python
 
-git clone https://github.com/adharvarun/AdharvBrowse.git
-pip install -r requirements.txt
-python app.py
+## Installation
+`git clone https://github.com/adharvarun/AdharvBrowse.git`
+`pip install -r requirements.txt`
+`python app.py`
 
+## Developed By
 Adharv Arun – [Github - adharvarun](https://github.com/adharvarun) – adharvarun.10@gmail.com
 
+## License
 Unlicensed Product
 
 ## Contributing
